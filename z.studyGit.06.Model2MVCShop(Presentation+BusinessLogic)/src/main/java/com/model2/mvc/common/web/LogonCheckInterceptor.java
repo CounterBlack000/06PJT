@@ -59,9 +59,10 @@ public class LogonCheckInterceptor extends HandlerInterceptorAdapter {
 		}else{ //==> 미 로그인한 화원이라면...
 			//==> 로그인 시도 중.....
 			String uri = request.getRequestURI();
+			//비 로그인 상태에서도 다음과 같은 상태에서는 true를 반환한다.
 			if(		uri.indexOf("addUserView") != -1 	|| 	uri.indexOf("addUser") != -1 || 
 					uri.indexOf("loginView") != -1 			||	uri.indexOf("login") != -1 		|| 
-					uri.indexOf("checkDuplication") != -1 ){
+					uri.indexOf("checkDuplication") != -1 || uri.indexOf("listProduct") != -1){
 				System.out.println("[ 로그 시도 상태 .... ]");
 				System.out.println("[ LogonCheckInterceptor end........]\n");
 				return true;

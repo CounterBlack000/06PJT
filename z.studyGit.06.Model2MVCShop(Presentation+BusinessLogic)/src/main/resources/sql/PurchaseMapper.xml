@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		
+<mapper namespace="PurchaseMapper">
+
+	<resultMap id="purchaseSelectMap" type="com.model2.mvc.service.domain.Purchase">
+		<result property="tranNo" 			column="tran_no" 			jdbcType="NUMERIC"/>	
+		<result property="divyAddr" 			column="demailaddr" 			jdbcType="VARCHAR"/>
+		<result property="divyDate" 			column="dlvy_date" 			jdbcType="DATE"/>
+		<result property="divyRequest" 			column="dlvy_request" 			jdbcType="VARCHAR"/>	
+		<result property="paymentOption" 			column="payment_option" 			jdbcType="CHAR"/>	
+		<result property="receiverName" 			column="receiver_name" 			jdbcType="VARCHAR"/>	
+		<result property="receiverPhone" 			column="receiver_phone" 			jdbcType="VARCHAR"/>	
+		<result property="tranCode" 			column="tran_status_code" 			jdbcType="VARCHAR"/>	
+		<result property="orderDate" 			column="order_data" 			jdbcType="DATE"/>	
+		
+		<association property="buyer" column="BUYER_ID" javaType="user">
+			<id property="userId" column="BUYER_ID" />
+			<result property="userId"	column="user_id" 		jdbcType="VARCHAR" />
+			<result property="userName"	column="user_name" 		jdbcType="VARCHAR" />
+			<result property="password" 	column="password" 		jdbcType="VARCHAR" />
+			<result property="role" 				column="role" 					jdbcType="VARCHAR" />
+			<result property="ssn" 				column="ssn" 					jdbcType="VARCHAR" />
+			<result property="phone" 			column="cell_phone" 		jdbcType="VARCHAR" />
+			<result property="addr" 				column="addr" 					jdbcType="VARCHAR" />
+			<result property="email" 			column="email" 				jdbcType="NUMERIC"  />
+			<result property="regDate" 		column="reg_date" 			jdbcType="DATE" />
+		</association>
+		
+		<association property="purchaseProd" column="prod_no" javaType="com.model2.mvc.service.domain.Product">
+			<id property="prodNo" 			column="PROD_NO"/>
+			<result property="prodNo" 			column="PROD_NO" 			jdbcType="NUMERIC"/>
+			<result property="prodName" 			column="PROD_NAME" 			jdbcType="VARCHAR"/>
+			<result property="prodDetail" 			column="PROD_DETAIL" 			jdbcType="VARCHAR"/>	
+			<result property="manuDate" 			column="MANUFACTURE_DAY" 			jdbcType="VARCHAR"/>	
+			<result property="price" 			column="PRICE" 			jdbcType="NUMERIC"/>
+			<result property="fileName" 			column="IMAGE_FILE" 			jdbcType="VARCHAR"/>
+			<result property="regDate" 			column="REG_DATE" 			jdbcType="DATE"/>	
+		</association>
+
+				
+	</resultMap>
+		
+	<select id="getPurchase" resultMap="purchaseSelectMap" parameterType="string">
+		SELECT DISTINCT
+		t.tran_no, t.prod_no, t.buyer_id, t.payment_option, t.receiver_name, t.receiver_phone, t.demailaddr, t.dlvy_request, t.tran_status_code, t.order_data, t.dlvy_date,
+		p.prod_no, p.prod_name, p.prod_detail, p.manufacture_day, p.price, p.image_file, p.reg_date,
+		u.user_id, u.user_name, u.password, u.role, u.ssn, u.cell_phone, u.addr, u.email, u.reg_date
+		FROM TRANSACTION t, product p, users u
+		WHERE   t.prod_no = p.prod_no
+		AND   t.buyer_id = u.user_id
+		AND   t.tran_no = #{value}
+	</select>
+	
+	<select id="getPurchase2" resultMap="purchaseSelectMap" parameterType="string">
+		SELECT DISTINCT
+		t.tran_no, t.prod_no, t.buyer_id, t.payment_option, t.receiver_name, t.receiver_phone, t.demailaddr, t.dlvy_request, t.tran_status_code, t.order_data, t.dlvy_date,
+		p.prod_no, p.prod_name, p.prod_detail, p.manufacture_day, p.price, p.image_file, p.reg_date,
+		u.user_id, u.user_name, u.password, u.role, u.ssn, u.cell_phone, u.addr, u.email, u.reg_date
+		FROM TRANSACTION t, product p, users u
+		WHERE   t.prod_no = p.prod_no
+		AND   t.buyer_id = u.user_id
+		AND   t.prod_no = #{value}
+	</select>
+
+	<insert id="addPurchase" parameterType="com.model2.mvc.service.domain.Purchase">
+		INSERT 
+		INTO TRANSACTION (tran_no, demailaddr, dlvy_date, dlvy_request, payment_option, 
+		receiver_name, receiver_phone, tran_status_code, order_data,
+		BUYER_ID, PROD_NO)
+		values (seq_transaction_tran_no.nextval, #{divyAddr} ,#{divyDate} ,#{divyRequest} ,#{paymentOption},
+		#{receiverName} ,#{receiverPhone} ,#{tranCode} ,SYSDATE,
+		#{buyer.userId}, #{purchaseProd.prodNo})
+	</insert>
+	
+	<update id="updatePurchase" parameterType="com.model2.mvc.service.domain.Purchase">
+		UPDATE 
+		TRANSACTION 
+		<set>
+			payment_option=#{paymentOption}, receiver_name=#{receiverName}, receiver_phone=#{receiverPhone}, 
+			demailaddr=#{divyAddr}, dlvy_request=#{divyRequest}, dlvy_date=to_date(#{divyDate}, 'YY/MM/DD'), 
+			order_data=SYSDATE 
+		</set> 
+		WHERE tran_no=#{tranNo}
+	</update>
+	
+	<update id="updateTrancode" parameterType="com.model2.mvc.service.domain.Purchase">
+		update transaction set tran_status_code=#{tranCode} where tran_no=#{tranNo}
+	</update>
+	
+	<!--  <select id="getListPurchase" parameterType="map"  resultMap="purchaseSelectMap">	
+		SELECT * 
+	  	FROM (		SELECT inner_table.* ,  ROWNUM AS row_seq 
+	  					FROM		(	SELECT DISTINCT 
+					  					t.tran_no AS t_tno, t.prod_no AS t_pno, t.buyer_id AS t_bid, t.payment_option AS t_po, t.receiver_name AS t_rn, 
+					  					t.receiver_phone AS t_rp, t.demailaddr AS t_da, t.dlvy_request AS t_dr, 
+					  					t.tran_status_code AS t_rsc, t.order_data AS t_od, t.dlvy_date AS t_dd,
+					  					p.prod_no AS p_pno, p.prod_name AS p_pn, p.prod_detail AS p_pd, p.manufacture_day p_md, p.price AS p_p, 
+					  					p.image_file AS p_if, p.reg_date AS p_rd,
+					  					u.user_id AS u_id, u.user_name AS u_un, u.password AS u_pss, u.role AS u_r, u.ssn AS u_s, 
+					  					u.cell_phone AS u_ph, u.addr AS u_add, u.email AS u_e, u.reg_date AS u_rd
+					  					FROM TRANSACTION t, product p, users u
+					  					where
+						  					t.prod_no = p.prod_no
+						  					AND  t.buyer_id = #{buyerId}
+						  					AND  t.buyer_id = u.user_id				  					
+					  					ORDER BY t.tran_no
+	  								) inner_table
+						WHERE ROWNUM <![CDATA[<=]]> #{search.endRowNum}  )       
+		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
+	</select> -->
+	<select id="getPurchaseList" parameterType="map" resultMap="purchaseSelectMap">
+			SELECT *
+			FROM (	SELECT inner_table.* , ROWNUM AS row_seq
+					FROM	(	SELECT DISTINCT 
+								t.tran_no , t.prod_no, t.buyer_id , t.payment_option , t.receiver_name , 
+								t.receiver_phone, t.demailaddr , t.dlvy_request , 
+								t.tran_status_code , t.order_data, t.dlvy_date ,
+								p.prod_no AS p_pno, p.prod_name , p.prod_detail, p.manufacture_day, p.price , 
+								p.image_file, p.reg_date ,
+								u.user_id AS u_id, u.user_name , u.password , u.role , u.ssn, 
+								u.cell_phone , u.addr , u.email, u.reg_date AS u_rd
+								FROM TRANSACTION t, product p, users u
+								<where>
+								t.prod_no = p.prod_no
+								AND  t.buyer_id = #{buyerId}
+								AND  t.buyer_id = u.user_id
+								</where>			
+								ORDER BY t.tran_no
+						) inner_table
+				WHERE ROWNUM &lt;= #{search.endRowNum} )
+			WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}					
+											
+	</select>
+	
+	<select id="getTotalCount"  parameterType="string"	 resultType="int">
+		  	SELECT COUNT(*)
+	  		FROM(
+	  			SELECT DISTINCT 
+				t.tran_no AS t_tno, t.prod_no AS t_pno, t.buyer_id AS t_bid, t.payment_option AS t_po, t.receiver_name AS t_rn, 
+				t.receiver_phone AS t_rp, t.demailaddr AS t_da, t.dlvy_request AS t_dr, 
+				t.tran_status_code AS t_rsc, t.order_data AS t_od, t.dlvy_date AS t_dd,
+				p.prod_no AS p_pno, p.prod_name AS p_pn, p.prod_detail AS p_pd, p.manufacture_day p_md, p.price AS p_p, 
+				p.image_file AS p_if, p.reg_date AS p_rd,
+				u.user_id AS u_id, u.user_name AS u_un, u.password AS u_pss, u.role AS u_r, u.ssn AS u_s, 
+				u.cell_phone AS u_ph, u.addr AS u_add, u.email AS u_e, u.reg_date AS u_rd
+				FROM TRANSACTION t, product p, users u
+				<where>
+					t.prod_no = p.prod_no
+					AND  t.buyer_id = #{buyerId}
+					AND  t.buyer_id = u.user_id
+				</where>
+				ORDER BY t.tran_no
+	  		
+	  		) countTable	
+										
+	</select>
+
+</mapper>		
+
