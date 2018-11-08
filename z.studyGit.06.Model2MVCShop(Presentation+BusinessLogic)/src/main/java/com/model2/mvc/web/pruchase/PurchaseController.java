@@ -1,5 +1,7 @@
 package com.model2.mvc.web.pruchase;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.model2.mvc.common.Page;
+import com.model2.mvc.common.Search;
 import com.model2.mvc.service.domain.Product;
 import com.model2.mvc.service.domain.Purchase;
 import com.model2.mvc.service.domain.User;
@@ -92,13 +96,50 @@ public class PurchaseController {
 		modelAndView.setViewName("purchase/addPurchase.jsp");
 		modelAndView.addObject("purchase", purchase);
 		
+		System.out.println("addPurchase 수행 종료...");
+		
 		return modelAndView;
 	}
-/*	
-	@RequestMapping(value="/getPurchase.do", method=RequestMethod.POST)
-	public ModelAndView getPurchase(@) throws Exception {
+	
+	@RequestMapping("/getPurchase.do")
+	public ModelAndView getPurchase(@RequestParam("tranNo") String tranNo) throws Exception {
 		
+		System.out.println("getPurchase 수행 시작.....");
+		int tranNoCast = Integer.parseInt(tranNo);
+		
+		Purchase purchase = purchaseService.getPurchase(tranNoCast);
+		
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("purchase/getPurchase.jsp");
+		modelAndView.addObject("purchase", purchase);
+		System.out.println("getPurchase 수행 끝.....");
+
+		return modelAndView;
 	}
 	
-*/
+	@RequestMapping("/listPurchase.do")
+	public ModelAndView getPurchaseList(@ModelAttribute("search") Search search,
+										HttpSession session) throws Exception {
+		System.out.println("getPurchaseList 수행 시작...");
+		if(search.getCurrentPage() == 0 ){
+			search.setCurrentPage(1);
+		}
+		search.setPageSize(pageSize);
+		
+		String buyerId = ((User)session.getAttribute("user")).getUserId();
+		
+		Map<String,Object> map = purchaseService.getPurchaseList(search, buyerId);
+		Page resultPage = new Page( search.getCurrentPage(), ((Integer)map.get("totalCount")).intValue(), pageUnit, pageSize);
+		System.out.println(resultPage);
+		
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("purchase/listPurchase.jsp");
+		modelAndView.addObject("list", map.get("list"));
+		modelAndView.addObject("resultPage", resultPage);
+		modelAndView.addObject("search", search);
+		System.out.println("getPurchaseList 수행 끝...");
+		
+		return modelAndView;
+	}
+
 }

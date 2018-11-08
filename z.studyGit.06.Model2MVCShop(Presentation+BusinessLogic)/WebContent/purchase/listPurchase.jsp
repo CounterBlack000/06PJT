@@ -89,7 +89,7 @@
 		<tr class="ct_list_pop">
 			<td align="center">
 			
-				<a href="/getPurchase.do?tranNo=<%--<%=purchase.getTranNo()%>--%>${purchase.tranNo}"><%--<%=i+1%> --%>${i+1}</a>
+				<a href="/getPurchase.do?tranNo=<%--<%=purchase.getTranNo()%>--%>${purchase.tranNo}"><%--<%=i+1%> --%>${i}</a>
 			
 			</td>
 			<td></td>
