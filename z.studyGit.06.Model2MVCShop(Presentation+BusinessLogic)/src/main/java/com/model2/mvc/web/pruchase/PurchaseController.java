@@ -83,11 +83,12 @@ public class PurchaseController {
 		User user = new User();
 		
 		user.setUserId(buyerId);
+		product.setProTranCode("buy");
 		product.setProdNo(prodNo);
 				
 		purchase.setBuyer(user);
 		purchase.setPurchaseProd(product);
-		purchase.setTranCode("0");
+		purchase.setTranCode("buy");
 		System.out.println("얻어온 purchase : " + purchase);
 		
 		purchaseService.addPurchase(purchase);
@@ -102,7 +103,8 @@ public class PurchaseController {
 	}
 	
 	@RequestMapping("/getPurchase.do")
-	public ModelAndView getPurchase(@RequestParam("tranNo") String tranNo) throws Exception {
+	public ModelAndView getPurchase(@RequestParam("tranNo") String tranNo
+									) throws Exception {
 		
 		System.out.println("getPurchase 수행 시작.....");
 		int tranNoCast = Integer.parseInt(tranNo);
@@ -110,7 +112,7 @@ public class PurchaseController {
 		Purchase purchase = purchaseService.getPurchase(tranNoCast);
 		
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("purchase/getPurchase.jsp");
+		modelAndView.setViewName("purchase/getPurchase.jsp"); //디폴트가 forward
 		modelAndView.addObject("purchase", purchase);
 		System.out.println("getPurchase 수행 끝.....");
 
@@ -131,7 +133,7 @@ public class PurchaseController {
 		Map<String,Object> map = purchaseService.getPurchaseList(search, buyerId);
 		Page resultPage = new Page( search.getCurrentPage(), ((Integer)map.get("totalCount")).intValue(), pageUnit, pageSize);
 		System.out.println(resultPage);
-		
+		System.out.println("purchaseList에서의 purchase list : " + map.get("list"));
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("purchase/listPurchase.jsp");
 		modelAndView.addObject("list", map.get("list"));
@@ -141,5 +143,65 @@ public class PurchaseController {
 		
 		return modelAndView;
 	}
+	
+	@RequestMapping("/updatePurchaseView.do")
+	public ModelAndView updatePurchaseView(@RequestParam("tranNo") String tranNo) throws Exception {
+		System.out.println("updatePurchaseView 수행 시작...");
+		
+		Purchase purchase = purchaseService.getPurchase(Integer.parseInt(tranNo));
+		
+		System.out.println("updatePurchaseView 에서의 purchase : " + purchase);
+		
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("purchase/updatePurchaseView.jsp");
+		modelAndView.addObject("purchase", purchase);
+		System.out.println("updatePurchaseView 수행 끝...");
 
+		return modelAndView;
+	}
+	
+	@RequestMapping("/updatePurchase.do")
+	public ModelAndView updatePurchase(@ModelAttribute("purchase") Purchase purchase) throws Exception{
+		System.out.println("updatePurchase 수행 시작...");
+		
+		System.out.println("updatePurchase 에서 업데이트할 purchase" + purchase);
+		purchaseService.updatePurcahse(purchase);
+		
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("redirect:/getPurchase.do");
+		modelAndView.addObject("tranNo", purchase.getTranNo());
+		System.out.println("updatePurchase 수행 끝...");
+		
+		return modelAndView;
+	}
+	
+	@RequestMapping("/updateTranCode.do")
+	public ModelAndView updateTranCode( @RequestParam("prodNo") String prodNo, @RequestParam("tranCode") String tranCode, 
+										@RequestParam("page") String inPage, @RequestParam("menu") String menu,
+										@RequestParam("searchCondition") String searchCondition, @RequestParam("searchKeyword") String searchKeyword) 
+										throws Exception {
+		
+		Purchase purchase = purchaseService.getPurchase2(Integer.parseInt(prodNo));
+		
+		if(tranCode.equals("buy")) {
+			tranCode = "tra";
+		} else if(tranCode.equals("tra")) {
+			tranCode = "com";
+		}
+		purchase.setTranCode(tranCode);
+		
+		purchaseService.updateTranCode(purchase);
+		
+		ModelAndView modelAndView = new ModelAndView();
+		
+		if(searchCondition != null && searchKeyword != null) {
+			modelAndView.setViewName("redirect:/listProduct.do?page="+inPage+"&menu="+menu+"&searchCondition="+searchCondition+"&searchKeyword="+searchKeyword);
+		}
+		modelAndView.setViewName("redirect:/listProduct.do?page="+inPage+"&menu="+menu);
+
+		return modelAndView;
+		
+	}
+	
+	
 }

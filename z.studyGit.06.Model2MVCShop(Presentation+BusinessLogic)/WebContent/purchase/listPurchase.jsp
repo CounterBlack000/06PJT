@@ -94,7 +94,7 @@
 			</td>
 			<td></td>
 			<td align="left">
-				<a href="/getUser.do?userId=<%--<%=purchase.getBuyer().getUserId()%>--%>${purchase.buyer.userId}"></a>
+				<a href="/getUser.do?userId=<%--<%=purchase.getBuyer().getUserId()%>--%>${purchase.buyer.userId}">${purchase.buyer.userId}</a>
 			</td>
 			<td></td>
 			<td align="left"><%--<%=purchase.getReceiverName()%>--%>${purchase.receiverName}</td>

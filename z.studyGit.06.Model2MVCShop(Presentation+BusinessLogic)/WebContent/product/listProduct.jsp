@@ -194,10 +194,10 @@
 						배송완료
 					<%} %>
 					--%>
-					<c:if test="${product.proTranCode == null}">
+					<c:if test="${product.proTranCode == 'sel' || product.proTranCode == '0  ' || product.proTranCode == null}">
 						판매등록
 					</c:if>
-					<c:if test="${product.proTranCode == 'buy'}">
+					<c:if test="${product.proTranCode == 'buy' || product.proTranCode == '1  '}">
 						<c:if test="${nowSearchState}">
 							<a href="/updateTranCode.do?prodNo=${product.prodNo}&tranCode=${product.proTranCode}&page=${resultPage.beginUnitPage-resultPage.pageUnit}&menu=${menu}&searchCondition=${search.searchCondition}&searchKeyword=${search.searchKeyword}">상품구매(배송)</a>							
 						</c:if>
@@ -205,10 +205,10 @@
 							<a href="/updateTranCode.do?prodNo=${product.prodNo}&tranCode=${product.proTranCode}&page=${resultPage.beginUnitPage-resultPage.pageUnit}&menu=${menu}">상품구매(배송)</a>		
 						</c:if>
 					</c:if>
-					<c:if test="${product.proTranCode == 'tra'}">
+					<c:if test="${product.proTranCode == 'tra'|| product.proTranCode == '2  '}">
 						배송중
 					</c:if>
-					<c:if test="${product.proTranCode == 'com'}">
+					<c:if test="${product.proTranCode == 'com'|| product.proTranCode == '3  '}">
 						배송완료
 					</c:if>
 				</c:if>	
@@ -231,13 +231,13 @@
 				--%>
 				<c:if test="${user.role eq 'user'}">
 				<%-- <fn:contains test="${user.userId, 'user'}"> --%>
-					<c:if test="${product.proTranCode == null}">
+					<c:if test="${product.proTranCode == 'sel'|| product.proTranCode == '0  '|| product.proTranCode == null}">
 						판매등록
 					</c:if>
-					<c:if test="${product.proTranCode == 'buy'}">
+					<c:if test="${product.proTranCode == 'buy'|| product.proTranCode == '1  '}">
 						구매완료
 					</c:if>
-					<c:if test="${product.proTranCode == 'tra'}">
+					<c:if test="${product.proTranCode == 'tra'|| product.proTranCode == '2  '}">
 						<c:if test="${nowSearchState}">
 							<a href="/updateTranCode.do?prodNo=${product.prodNo}&tranCode=${product.proTranCode}&page=${resultPage.beginUnitPage-resultPage.pageUnit}&menu=${menu}&searchCondition=${search.searchCondition}&searchKeyword=${search.searchKeyword}">배송중(수령확인)</a>							
 						</c:if>
@@ -245,7 +245,7 @@
 							<a href="/updateTranCode.do?prodNo=${product.prodNo}&tranCode=${product.proTranCode}&page=${resultPage.beginUnitPage-resultPage.pageUnit}&menu=${menu}">배송중(수령확인)</a>		
 						</c:if>
 					</c:if>
-					<c:if test="${product.proTranCode == 'com'}">
+					<c:if test="${product.proTranCode == 'com'|| product.proTranCode == '3  '}">
 						배송완료
 					</c:if>
 				<%-- </fn:contains> --%>
@@ -266,16 +266,16 @@
 				<%} %>		
 				--%>
 				<c:if test="${user == null}">
-					<c:if test="${product.proTranCode == null}">
+					<c:if test="${product.proTranCode == 'sel'|| product.proTranCode == '0  '|| product.proTranCode == null}">
 						판매등록
 					</c:if>
-					<c:if test="${product.proTranCode == 'buy'}">
+					<c:if test="${product.proTranCode == 'buy'|| product.proTranCode == '1  '}">
 						구매완료
 					</c:if>
-					<c:if test="${product.proTranCode == 'tra'}">
+					<c:if test="${product.proTranCode == 'tra'|| product.proTranCode == '2  '}">
 						배송중
 					</c:if>
-					<c:if test="${product.proTranCode == 'com'}">
+					<c:if test="${product.proTranCode == 'com'|| product.proTranCode == '3  '}">
 						배송완료
 					</c:if>
 				</c:if>
