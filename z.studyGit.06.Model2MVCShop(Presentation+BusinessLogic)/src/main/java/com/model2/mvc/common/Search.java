@@ -15,6 +15,8 @@ public class Search {
 	//==> 참조
 	private int endRowNum;
 	private int startRowNum;
+	//정렬을 위해 추가된 property
+	private String searchFilter;
 	
 	///Constructor
 	public Search() {
@@ -49,6 +51,14 @@ public class Search {
 		this.searchKeyword = searchKeyword;
 	}
 	
+	public String getSearchFilter() {
+		return searchFilter;
+	}
+
+	public void setSearchFilter(String searchFilter) {
+		this.searchFilter = searchFilter;
+	}
+
 	//==> Select Query 시 ROWNUM 마지막 값 
 	public int getEndRowNum() {
 		return getCurrentPage()*getPageSize();

@@ -102,6 +102,15 @@
 				<option value="1"  ${ ! empty search.searchCondition && search.searchCondition==1 ? "selected" : "" }>상품명</option>		
 				<option value="2"  ${ ! empty search.searchCondition && search.searchCondition==2 ? "selected" : "" }>상품가격</option>		
 			</select>
+			
+			<select name="searchFilter" class="ct_input_g" style="width:80px">
+				<option value="0" ${! empty search.searchFilter && search.searchFilter==0 ? "selected" : ""}>기본</option>
+				<option value="1" ${! empty search.searchFilter && search.searchFilter==1 ? "selected" : ""}>가격 낮은순(전체)</option>
+				<option value="2" ${! empty search.searchFilter && search.searchFilter==2 ? "selected" : ""}>가격 높은순(전체)</option>
+				<option value="3" ${! empty search.searchFilter && search.searchFilter==3 ? "selected" : ""}>가격 낮은순(이 페이지에서)</option>
+				<option value="4" ${! empty search.searchFilter && search.searchFilter==4 ? "selected" : ""}>가격 높은순(이 페이지에서)</option>
+			</select>
+			
 			<input 	type="text" name="searchKeyword"  value="<%--<%=searchKeyword %>--%>${search.searchKeyword}" 
 							class="ct_input_g" style="width:200px; height:19px" >
 		</td>

@@ -61,9 +61,27 @@
 												</if>				
 											</where>
 										</if>
-										ORDER BY p.prod_name) inner_table
+										<if test="searchFilter != null">											
+												<if test="searchFilter == 0 and searchFilter != '' ">											
+													ORDER BY p.prod_name
+												</if>
+												<if test="searchFilter == 1 and searchFilter != '' ">
+													ORDER BY p.price ASC
+												</if>
+												<if test="searchFilter == 2 and searchFilter != '' ">
+													ORDER BY p.price DESC
+												</if>											
+										</if>) inner_table
 						WHERE ROWNUM &lt;= #{endRowNum} )
-		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum} 
+		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum} 		
+		<if test="searchFilter != null">											
+			<if test="searchFilter == 3 and searchFilter != '' ">
+				ORDER BY price ASC
+			</if>
+			<if test="searchFilter == 4 and searchFilter != '' ">
+				ORDER BY price DESC
+			</if>											
+		</if>		
 	</select>
 
 	<select id="getTotalCount"  parameterType="search"	 resultType="int">
