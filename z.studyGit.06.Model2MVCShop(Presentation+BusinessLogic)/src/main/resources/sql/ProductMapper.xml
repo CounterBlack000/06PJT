@@ -51,14 +51,15 @@
 										<if test="searchCondition != null">
 											<where>
 												<if test="searchCondition == 0 and searchKeyword !='' ">
-													AND p.prod_no like #{searchKeyword}||'%'
+													AND p.prod_no like #{searchKeyword}||'%' AND
 												</if>
 												<if test="searchCondition == 1 and searchKeyword !='' ">
-													AND p.prod_name like #{searchKeyword}||'%'
+													AND p.prod_name like #{searchKeyword}||'%' AND
 												</if>
 												<if test="searchCondition == 2 and searchKeyword !='' ">
-													AND p.price like #{searchKeyword}||'%'
+													AND p.price like #{searchKeyword}||'%' AND
 												</if>				
+												p.price BETWEEN #{minPrice} AND #{maxPrice}
 											</where>
 										</if>
 										<if test="searchFilter != null">											
@@ -93,16 +94,19 @@
 							<if test="searchCondition != null">
 								<where>
 									<if test="searchCondition == 0 and searchKeyword !='' ">
-										AND p.prod_no like  #{searchKeyword}||'%'
+										AND p.prod_no like  #{searchKeyword}||'%' AND
 									</if>
 									<if test="searchCondition == 1 and searchKeyword !='' ">
-										AND p.prod_name like  #{searchKeyword}||'%'
+										AND p.prod_name like  #{searchKeyword}||'%' AND
 									</if>
 									<if test="searchCondition == 2 and searchKeyword !='' ">
-										AND p.price like  #{searchKeyword}||'%'
-									</if>				
+										AND p.price like  #{searchKeyword}||'%' AND
+									</if>		
+									p.price BETWEEN #{minPrice} AND #{maxPrice}		
 								</where>
-							</if>) countTable	
+							</if>
+							
+							) countTable	
 										
 	</select>
 </mapper>

@@ -111,6 +111,12 @@
 				<option value="4" ${! empty search.searchFilter && search.searchFilter==4 ? "selected" : ""}>가격 높은순(이 페이지에서)</option>
 			</select>
 			
+			<input 	type="text" name="minPrice"  value="${search.minPrice}" 
+							class="ct_input_g" style="width:100px; height:19px" >
+			
+			<input 	type="text" name="maxPrice"  value="${(search.maxPrice!=0)? search.maxPrice : 5000000}" 
+							class="ct_input_g" style="width:100px; height:19px" >
+							
 			<input 	type="text" name="searchKeyword"  value="<%--<%=searchKeyword %>--%>${search.searchKeyword}" 
 							class="ct_input_g" style="width:200px; height:19px" >
 		</td>

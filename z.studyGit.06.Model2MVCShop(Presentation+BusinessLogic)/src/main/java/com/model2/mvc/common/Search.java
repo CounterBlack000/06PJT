@@ -15,8 +15,13 @@ public class Search {
 	//==> 참조
 	private int endRowNum;
 	private int startRowNum;
+	
 	//정렬을 위해 추가된 property
 	private String searchFilter;
+	
+	//가격범위를 위해 추가된 property 
+	private int minPrice;
+	private int maxPrice;
 	
 	///Constructor
 	public Search() {
@@ -66,6 +71,22 @@ public class Search {
 	//==> Select Query 시 ROWNUM 시작 값
 	public int getStartRowNum() {
 		return (getCurrentPage()-1)*getPageSize()+1;
+	}
+
+	public int getMinPrice() {
+		return minPrice;
+	}
+
+	public void setMinPrice(int minPrice) {
+		this.minPrice = minPrice;
+	}
+
+	public int getMaxPrice() {
+		return maxPrice;
+	}
+
+	public void setMaxPrice(int maxPrice) {
+		this.maxPrice = maxPrice;
 	}
 
 	@Override
